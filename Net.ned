@@ -3,8 +3,9 @@ network Net
     parameters:
         volatile int numPriorities = default(3);
         
-        //pool of times needed for differenciate the priorities
-        //if you can mix these times inside the parameters of Source and Queue
+        //pool of times needed for differentiate the priorities
+        //you can mix these times inside the parameters of Source and Queue
+        //unfortunately there is no way to create an array of times
         volatile double Time1 @unit(s) = 0.1s;
         volatile double Time2 @unit(s) = 0.2s;
         volatile double Time3 @unit(s) = 0.3s;
