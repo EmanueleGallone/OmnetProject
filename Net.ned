@@ -1,7 +1,7 @@
 network Net
 {
     parameters:
-        volatile int numPriorities = default(5); //max 99! if you want more, change the length of the array inside Source 
+        volatile int numPriorities = default(5); //max 99! if you want more, change the length of the array inside Source.cc 
         volatile bool preemptive = default(false);
         
         //pool of times needed for differentiate the priorities service times
