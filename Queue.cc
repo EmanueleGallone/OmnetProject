@@ -55,7 +55,7 @@ void Queue::initialize()
     for(int i = 0; i < numPrio; i++){
         //creating #queues that equals the # of priorities
         //NB the queues are ordered. The most important is queues[0] and than come the others
-       queues.add(new cQueue(std::to_string(i).c_str()));
+       queues.add(new cQueue(std::to_string(i).c_str())); //creating queue with name = priority
    }
 
     qlenSignal = registerSignal("qlen");
@@ -63,12 +63,14 @@ void Queue::initialize()
     queueingTimeSignal = registerSignal("queueingTime");
     responseTimeSignal = registerSignal("responseTime");
 
-    emit(qlenSignal, check_and_cast<cQueue*>(queues.get(0))->getLength());
+    emit(qlenSignal, check_and_cast<cQueue*>(queues.get(0))->getLength());//temp
     emit(busySignal, false);
 }
 
 void Queue::handleMessage(cMessage *msg)
 {
+    //TODO make this server preemtable
+
     if (msg == endServiceMsg) { // Self-message arrived
 
         EV << "Completed service of " << msgServiced->getName() << endl;
@@ -84,7 +86,7 @@ void Queue::handleMessage(cMessage *msg)
             emit(busySignal, false);
 
         }
-        /*else {
+        /*else { //good if you want to be more concise
             PriorityMessage *test;
             if ((test=getMsgPtrToServe())){
                 int priority = test->getPriority();
@@ -104,12 +106,12 @@ void Queue::handleMessage(cMessage *msg)
 
             int notEmpty = 0;
             if(!((notEmpty = getMsgToServe()) == -1)){ //queue is not empty!
-                int priority = 0;
-                cQueue *queue = check_and_cast<cQueue*>(queues.get(notEmpty));
+                cQueue *queue = check_and_cast<cQueue*>(queues.get(notEmpty)); //taking the most important queue that is not empty
 
                 PriorityMessage *m = (PriorityMessage*)(queue->pop());
+                int priority = m->getPriority();
 
-                msgServiced = m;
+                msgServiced = m; //serving the message
                 emit(qlenSignal, queue->getLength()); //Queue length changed, emit new length!
 
                 //Waiting time: time from msg arrival to time msg enters the server (now)
@@ -117,7 +119,7 @@ void Queue::handleMessage(cMessage *msg)
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
                 simtime_t serviceTime = getServiceTimeForPriority(priority);
-                EV << " with service time of " << serviceTime.str() << endl;
+                EV << "with service time of " << serviceTime.str() << "s" << endl;
                 scheduleAt(simTime()+serviceTime, endServiceMsg);
             }
             else {
