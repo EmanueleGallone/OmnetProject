@@ -12,6 +12,7 @@ class Source : public cSimpleModule
 
     int numPrio;
 
+    //Needed for taking track of id generation of messages
     int generatedMsgCounter[100] = {0}; //obviously need to limit the max number of priority queues
 
   public:

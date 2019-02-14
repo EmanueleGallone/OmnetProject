@@ -1,11 +1,14 @@
 network Net
 {
     parameters:
-        volatile int numPriorities = default(3);
+        volatile int numPriorities = default(5); //max 99! if you want more, change the length of the array inside Source 
+        volatile bool preemptive = default(false);
         
         //pool of times needed for differentiate the priorities
         //you can mix these times inside the parameters of Source and Queue
         //unfortunately there is no way to create an array of times
+        //actually the first 5 priority queues get the service time sequentially.
+        //after the #5 the service time is random. for more info, see Queue::getServiceTimeForPriority(int priority)
         volatile double Time1 @unit(s) = 0.1s;
         volatile double Time2 @unit(s) = 0.2s;
         volatile double Time3 @unit(s) = 0.3s;
