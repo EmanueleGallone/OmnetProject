@@ -1,0 +1,42 @@
+file 1159 1550116147                                            
+version 2
+run General-0-20190214-04:48:50-19778
+attr configname General
+attr datetime 20190214-04:48:50
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 19778
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 0 Net.queue qlen:vector ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
+vector 1 Net.queue queueingTime:vector ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+vector 2 Net.queue responseTime:vector ETV
+attr interpolationmode none
+attr title "response time at end of service, vector"
+attr unit s
+vector 3 Net.sink lifetime:vector ETV
+attr interpolationmode none
+attr title "lifetime of arrived msg, vector"
+attr unit s
+vector 4 Net.sink arrivedMsg:vector ETV
+attr interpolationmode none
+attr title "number of arrived msg, vector"
+0	953 18 0 7 0 0.5 2 0 0 0 0
+1	971 42 3 18 0.3 1.2 4 0 0 0 0
+2	1013 51 7 24 0.5 1.4 4 0.2 0.3 0.9 0.21
+3	1064 51 8 25 0.5 1.4 4 0.5 0.6 2.1 1.11
+4	1115 43 8 25 0.5 1.4 4 1 4 10 30
+

@@ -1,0 +1,54 @@
+version 2
+run Net1-0-20190214-03:04:04-16033
+attr configname Net1
+attr datetime 20190214-03:04:04
+attr experiment Net1
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 16033
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.gen.interArrivalTime exponential(0.5s)
+
+vector 0 Net.queue qlen:vector ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
+0	0	0	0
+vector 1 Net.queue queueingTime:vector ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+1	4	0.3	0
+vector 2 Net.queue responseTime:vector ETV
+attr interpolationmode none
+attr title "response time at end of service, vector"
+attr unit s
+2	6	0.4	0.1
+vector 3 Net.sink lifetime:vector ETV
+attr interpolationmode none
+attr title "lifetime of arrived msg, vector"
+attr unit s
+vector 4 Net.sink arrivedMsg:vector ETV
+attr interpolationmode none
+attr title "number of arrived msg, vector"
+3	7	0.4	0.4
+4	7	0.4	1
+1	8	0.5	0
+0	11	0.6	0
+1	11	0.6	0.1
+2	11	0.6	0.1
+3	12	0.6	0.4
+4	12	0.6	2
+0	14	0.7	0
+1	14	0.7	0
+2	14	0.7	0.2
+3	15	0.7	0.5
+4	15	0.7	3
+2	17	0.8	0.1
+

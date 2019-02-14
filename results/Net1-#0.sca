@@ -1,0 +1,144 @@
+version 2
+run Net1-0-20190214-03:04:04-16033
+attr configname Net1
+attr datetime 20190214-03:04:04
+attr experiment Net1
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 16033
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.gen.interArrivalTime exponential(0.5s)
+
+scalar Net.sink arrivedMsg:last 3
+attr interpolationmode none
+attr title "number of arrived msg, last"
+statistic Net.sink lifetime:histogram
+field count 3
+field mean 0.43333333333333
+field stddev 0.057735026918963
+field min 0.4
+field max 0.5
+field sum 1.3
+field sqrsum 0.57
+attr interpolationmode none
+attr title "lifetime of arrived msg, histogram"
+attr unit s
+bin	-inf	0
+bin	0.374	0
+bin	0.376	0
+bin	0.378	0
+bin	0.38	0
+bin	0.382	0
+bin	0.384	0
+bin	0.386	0
+bin	0.388	0
+bin	0.39	0
+bin	0.392	0
+bin	0.394	0
+bin	0.396	0
+bin	0.398	2
+bin	0.4	0
+bin	0.402	0
+bin	0.404	0
+bin	0.406	0
+bin	0.408	0
+bin	0.41	0
+bin	0.412	0
+bin	0.414	0
+bin	0.416	0
+bin	0.418	0
+bin	0.42	0
+bin	0.422	0
+bin	0.424	0
+bin	0.426	0
+bin	0.428	0
+bin	0.43	0
+bin	0.432	0
+bin	0.434	0
+bin	0.436	0
+bin	0.438	0
+bin	0.44	0
+bin	0.442	0
+bin	0.444	0
+bin	0.446	0
+bin	0.448	0
+bin	0.45	0
+bin	0.452	0
+bin	0.454	0
+bin	0.456	0
+bin	0.458	0
+bin	0.46	0
+bin	0.462	0
+bin	0.464	0
+bin	0.466	0
+bin	0.468	0
+bin	0.47	0
+bin	0.472	0
+bin	0.474	0
+bin	0.476	0
+bin	0.478	0
+bin	0.48	0
+bin	0.482	0
+bin	0.484	0
+bin	0.486	0
+bin	0.488	0
+bin	0.49	0
+bin	0.492	0
+bin	0.494	0
+bin	0.496	0
+bin	0.498	0
+bin	0.5	1
+bin	0.502	0
+bin	0.504	0
+bin	0.506	0
+bin	0.508	0
+bin	0.51	0
+bin	0.512	0
+bin	0.514	0
+bin	0.516	0
+bin	0.518	0
+bin	0.52	0
+bin	0.522	0
+bin	0.524	0
+bin	0.526	0
+scalar Net.sink lifetime:mean 0.43333333333333
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink lifetime:max 0.5
+attr interpolationmode none
+attr title "lifetime of arrived msg, max"
+attr unit s
+scalar Net.queue responseTime:mean 0.125
+attr interpolationmode none
+attr title "response time at end of service, mean"
+attr unit s
+scalar Net.queue responseTime:max 0.2
+attr interpolationmode none
+attr title "response time at end of service, max"
+attr unit s
+scalar Net.queue queueingTime:mean 0.025
+attr interpolationmode none
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar Net.queue queueingTime:max 0.1
+attr interpolationmode none
+attr title "queueing time at dequeue, max"
+attr unit s
+scalar Net.queue busy:timeavg 0.5
+attr interpolationmode sample-hold
+attr title "server busy state, timeavg"
+scalar Net.queue qlen:timeavg 0
+attr interpolationmode sample-hold
+attr title "queue length, timeavg"
+scalar Net.queue qlen:max 0
+attr interpolationmode sample-hold
+attr title "queue length, max"
+
