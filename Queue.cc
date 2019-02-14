@@ -53,6 +53,8 @@ void Queue::initialize()
     numPrio = par("numPrio"); //number of priority queues
 
     for(int i = 0; i < numPrio; i++){
+        //creating #queues that equals the # of priorities
+        //NB the queues are ordered. The most important is queues[0] and than come the others
        queues.add(new cQueue(std::to_string(i).c_str()));
    }
 
