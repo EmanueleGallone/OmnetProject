@@ -9,6 +9,7 @@ simple Queue
         volatile double serviceTime5 @unit(s);
         
         volatile int numPrio;
+        volatile bool isPreemptive = default(false);
         @display("i=block/queue;q=queue");
         
         @signal[qlen](type="long");

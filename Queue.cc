@@ -11,6 +11,7 @@ class Queue : public cSimpleModule
     cMessage *endServiceMsg;
 
     int numPrio;
+    bool isPreemptive;
 
     cArray queues;
 
@@ -50,6 +51,7 @@ void Queue::initialize()
 {
     endServiceMsg = new cMessage("end-service");
 
+    isPreemptive = par("isPreemptive");
     numPrio = par("numPrio"); //number of priority queues
 
     for(int i = 0; i < numPrio; i++){
@@ -63,13 +65,12 @@ void Queue::initialize()
     queueingTimeSignal = registerSignal("queueingTime");
     responseTimeSignal = registerSignal("responseTime");
 
-    emit(qlenSignal, check_and_cast<cQueue*>(queues.get(0))->getLength());//temp
+    emit(qlenSignal, check_and_cast<cQueue*>(queues.get(0))->getLength());//temp, change this
     emit(busySignal, false);
 }
 
 void Queue::handleMessage(cMessage *msg)
 {
-    //TODO make this server preemtable
 
     if (msg == endServiceMsg) { // Self-message arrived
 
@@ -101,7 +102,6 @@ void Queue::handleMessage(cMessage *msg)
             }
         }*/
 
-
         else { // Queue contains users
 
             int notEmpty = 0;
@@ -122,14 +122,34 @@ void Queue::handleMessage(cMessage *msg)
                 EV << "with service time of " << serviceTime.str() << "s" << endl;
                 scheduleAt(simTime()+serviceTime, endServiceMsg);
             }
-            else {
-                EV << "something wrong!" << endl;
-            }
-
         }
-
     }
     else { // Data msg has arrived
+
+        if(isPreemptive){ //check if the server is preemptive
+
+            PriorityMessage* msgInService = (PriorityMessage*)msgServiced;
+            PriorityMessage* arrivedMsg = (PriorityMessage*)msg;
+
+            if(msgServiced && msgInService->getPriority() > arrivedMsg->getPriority()){//NB look at the condition ">".
+                //if there's someone with less priority, kick him away
+                EV << "Message " << msgServiced->getName() << " was thrown out because of preemption" << endl;
+
+                ((cQueue*)queues.get(msgInService->getPriority()))->insert(msgInService); //putting the msg in service away
+                EV << "Message " << msgServiced->getName() << " is back in queue" << endl;
+
+                cancelEvent(endServiceMsg);
+
+                msgServiced = arrivedMsg;//should I assign the casted object?
+                int priority = arrivedMsg->getPriority();
+
+                EV << "Starting service of " << msgServiced->getName() << endl;
+                simtime_t serviceTime = getServiceTimeForPriority(priority);
+                EV << "with service time of " << serviceTime.str() << "s" << endl;
+                scheduleAt(simTime()+serviceTime, endServiceMsg);
+            }
+
+        }//end of if(isPreemptive)
 
         //Setting arrival timestamp as msg field
         msg->setTimestamp();
@@ -146,7 +166,8 @@ void Queue::handleMessage(cMessage *msg)
             scheduleAt(simTime()+serviceTime, endServiceMsg);
             emit(busySignal, true);
         }
-        else {  //Message in service (server BUSY) ==> Queuing
+        else if(!(strcmp(msgServiced->getName(), msg->getName()) == 0)){  //if needed for preemption
+            //Message in service (server BUSY) ==> Queuing
 
             EV << "Queuing " << msg->getName() << endl;
 

@@ -12,7 +12,7 @@ class Source : public cSimpleModule
 
     int numPrio;
 
-    //Needed for taking track of id generation of messages
+    //Needed for taking track of id generation of messages for each priority
     int generatedMsgCounter[100] = {0}; //obviously need to limit the max number of priority queues
 
   public:
@@ -53,7 +53,7 @@ void Source::handleMessage(cMessage *msg)
 
     char msgname[60];
     int priority = (rand() % numPrio); //generating priority number from parameter
-    sprintf(msgname, "message-%d-priority:%d", ++generatedMsgCounter[priority], priority);
+    sprintf(msgname, "message-%d-priority-%d", ++generatedMsgCounter[priority], priority);
     PriorityMessage *message = new PriorityMessage(msgname);
     message->setPriority(priority);
 

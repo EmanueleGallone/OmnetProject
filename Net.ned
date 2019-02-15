@@ -32,6 +32,7 @@ network Net
         }
         queue: Queue {
             numPrio = numPriorities;
+            isPreemptive = preemptive;
             serviceTime1 = Time1;
             serviceTime2 = Time2;
             serviceTime3 = Time3;
