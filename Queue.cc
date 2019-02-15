@@ -133,6 +133,7 @@ void Queue::handleMessage(cMessage *msg)
 
             if(msgServiced && msgInService->getPriority() > arrivedMsg->getPriority()){//NB look at the condition ">".
                 //if there's someone with less priority, kick him away
+                bubble("Preemption occurred!");
                 EV << "Message " << msgServiced->getName() << " was thrown out because of preemption" << endl;
 
                 ((cQueue*)queues.get(msgInService->getPriority()))->insert(msgInService); //putting the msg in service away
