@@ -27,7 +27,6 @@ network Net
         }
         sink: Sink {
             parameters:
-                numPrio = numPriorities;
                 @display("p=329,100");
         }
         queue: Queue {

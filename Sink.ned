@@ -1,7 +1,6 @@
 simple Sink
 {
     parameters:
-        volatile int numPrio;
         @display("i=block/sink");
         @signal[lifetime](type="simtime_t");
         @signal[arrivedMsg](type="long");

@@ -13,7 +13,8 @@ class Queue : public cSimpleModule
     int numPrio;
     bool isPreemptive;
 
-    cArray queues;
+    cArray queues; //array of queues; so to avoid scanning all the queue every time, we thought that
+                   //splitting the queue in "sub-queues" based on priority will increase performance.
 
     simsignal_t qlenSignal;
     simsignal_t busySignal;
@@ -105,7 +106,7 @@ void Queue::handleMessage(cMessage *msg)
         else { // Queue contains users
 
             int notEmpty = 0;
-            if(!((notEmpty = getMsgToServe()) == -1)){ //queue is not empty!
+            if((notEmpty = getMsgToServe()) != -1){ //queue is not empty!
                 cQueue *queue = check_and_cast<cQueue*>(queues.get(notEmpty)); //taking the most important queue that is not empty
 
                 PriorityMessage *m = (PriorityMessage*)(queue->pop());
@@ -141,7 +142,7 @@ void Queue::handleMessage(cMessage *msg)
 
                 cancelEvent(endServiceMsg);
 
-                msgServiced = arrivedMsg;//should I assign the casted object?
+                msgServiced = arrivedMsg;
                 int priority = arrivedMsg->getPriority();
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
@@ -167,7 +168,7 @@ void Queue::handleMessage(cMessage *msg)
             scheduleAt(simTime()+serviceTime, endServiceMsg);
             emit(busySignal, true);
         }
-        else if(!(strcmp(msgServiced->getName(), msg->getName()) == 0)){  //if needed for preemption
+        else if(strcmp(msgServiced->getName(), msg->getName()) != 0){  //if needed for preemption
             //Message in service (server BUSY) ==> Queuing
 
             EV << "Queuing " << msg->getName() << endl;
