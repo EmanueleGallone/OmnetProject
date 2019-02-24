@@ -1,0 +1,71 @@
+version 2
+run Net3-0-20190223-11:36:19-25408
+attr configname Net3
+attr datetime 20190223-11:36:19
+attr experiment Net3
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 25408
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.gen.numPrio 5
+param **.queue.numPrio 5
+param **.queue.preemptive true
+param **.queue.resume true
+param **.gen.interArrivalTimes "\"0.20 0.25 0.30 0.35 0.40\""
+param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
+
+scalar Net.sink arrivedMsg:last -nan
+attr interpolationmode none
+attr title "number of arrived msg, last"
+statistic Net.sink lifetime:histogram
+field count 0
+field mean -nan
+field stddev -nan
+field min -nan
+field max -nan
+field sum 0
+field sqrsum 0
+attr interpolationmode none
+attr title "lifetime of arrived msg, histogram"
+attr unit s
+bin	-inf	0
+bin	0	0
+bin	1	0
+scalar Net.sink lifetime:mean -nan
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink lifetime:max -nan
+attr interpolationmode none
+attr title "lifetime of arrived msg, max"
+attr unit s
+scalar Net.queue responseTime:mean -nan
+attr interpolationmode none
+attr title "response time at end of service, mean"
+attr unit s
+scalar Net.queue responseTime:max -nan
+attr interpolationmode none
+attr title "response time at end of service, max"
+attr unit s
+scalar Net.queue queueingTime:mean -nan
+attr interpolationmode none
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar Net.queue queueingTime:max -nan
+attr interpolationmode none
+attr title "queueing time at dequeue, max"
+attr unit s
+scalar Net.queue busy:timeavg -nan
+attr interpolationmode sample-hold
+attr title "server busy state, timeavg"
+scalar Net.queue qlen:timeavg -nan
+attr interpolationmode sample-hold
+attr title "queue length, timeavg"
+

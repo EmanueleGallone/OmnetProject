@@ -1,36 +1,37 @@
-file 1188 1550109921                                            
+file 2502448 1550948796                                         
 version 2
-run Net1-0-20190214-03:04:04-16033
+run Net1-0-20190223-20:06:25-1297
 attr configname Net1
-attr datetime 20190214-03:04:04
+attr datetime 20190223-20:06:25
 attr experiment Net1
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 16033
+attr processid 1297
 attr repetition 0
 attr replication #0
 attr resultdir results
 attr runnumber 0
 attr seedset 0
-param **.gen.interArrivalTime exponential(0.5s)
+param **.gen.numPrio 5
+param **.queue.numPrio 5
+param **.queue.preemptive false
+param **.gen.interArrivalTimes "\"0.20 0.25 0.30 0.35 0.40\""
+param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 
 vector 0 Net.queue qlen:vector ETV
 attr interpolationmode sample-hold
 attr title "queue length, vector"
-0	493 8 0 0 0 0 1 0 0 0 0
 vector 1 Net.queue queueingTime:vector ETV
 attr interpolationmode none
 attr title "queueing time at dequeue, vector"
 attr unit s
-1	630 10 4 4 0.3 0.3 1 0 0 0 0
 vector 2 Net.queue responseTime:vector ETV
 attr interpolationmode none
 attr title "response time at end of service, vector"
 attr unit s
-2	776 12 6 6 0.4 0.4 1 0.1 0.1 0.1 0.01
 vector 3 Net.sink lifetime:vector ETV
 attr interpolationmode none
 attr title "lifetime of arrived msg, vector"
@@ -38,18 +39,9 @@ attr unit s
 vector 4 Net.sink arrivedMsg:vector ETV
 attr interpolationmode none
 attr title "number of arrived msg, vector"
-3	1022 12 7 7 0.4 0.4 1 0.4 0.4 0.4 0.16
-4	1034 10 7 7 0.4 0.4 1 1 1 1 1
-1	1044 10 8 8 0.5 0.5 1 0 0 0 0
-0	1054 11 11 11 0.6 0.6 1 0 0 0 0
-1	1065 13 11 11 0.6 0.6 1 0.1 0.1 0.1 0.01
-2	1078 13 11 11 0.6 0.6 1 0.1 0.1 0.1 0.01
-3	1091 13 12 12 0.6 0.6 1 0.4 0.4 0.4 0.16
-4	1104 11 12 12 0.6 0.6 1 2 2 2 4
-0	1115 11 14 14 0.7 0.7 1 0 0 0 0
-1	1126 11 14 14 0.7 0.7 1 0 0 0 0
-2	1137 13 14 14 0.7 0.7 1 0.2 0.2 0.2 0.04
-3	1150 13 15 15 0.7 0.7 1 0.5 0.5 0.5 0.25
-4	1163 11 15 15 0.7 0.7 1 3 3 3 9
-2	1174 13 17 17 0.8 0.8 1 0.1 0.1 0.1 0.01
+0	1143 678110 0 48097 0 3599.983697283477 23845 0 181 1501266 142758766
+1	679253 484865 4 48097 0.3 3599.983697283477 12025 0 272.37248855402 223364.99030586 29732052.70097
+2	1164118 486170 7 48097 0.653158559896 3599.983697283477 12024 0.002641279283 272.56439919424 226930.66253335 29901178.664808
+3	1650288 486187 8 48098 0.653158559896 3599.983697283477 12024 0.302641279283 272.86439919424 230537.86253335 30038419.222328
+4	2136475 365972 8 48098 0.653158559896 3599.983697283477 12024 1 12024 72294300 579535206900
 

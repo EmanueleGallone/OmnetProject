@@ -1,0 +1,28 @@
+version 2
+run Net3-0-20190223-11:36:19-25408
+attr configname Net3
+attr datetime 20190223-11:36:19
+attr experiment Net3
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 25408
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.gen.numPrio 5
+param **.queue.numPrio 5
+param **.queue.preemptive true
+param **.queue.resume true
+param **.gen.interArrivalTimes "\"0.20 0.25 0.30 0.35 0.40\""
+param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
+
+vector 0 Net.queue qlen:vector ETV
+attr interpolationmode sample-hold
+attr title "queue length, vector"
+0	0	0	0
+

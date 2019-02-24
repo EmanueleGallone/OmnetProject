@@ -12,6 +12,10 @@ class Queue : public cSimpleModule
 
     int numPrio;
     bool isPreemptive;
+    bool preemptiveResume;
+    simtime_t workStart;
+    cMersenneTwister* rng; // random number generator
+    std::vector<double> serviceTimes;
 
     cArray queues; //array of queues; so to avoid scanning all the queue every time, we thought that
                    //splitting the queue in "sub-queues" based on priority will increase performance.
@@ -31,7 +35,7 @@ class Queue : public cSimpleModule
     virtual int getMsgToServe();
     virtual PriorityMessage* getMsgPtrToServe();
     virtual double getServiceTimeForPriority(int priority);
-    virtual double randomTime();
+    virtual long getTotalQueueLength();
 };
 
 Define_Module(Queue);
@@ -52,13 +56,18 @@ void Queue::initialize()
 {
     endServiceMsg = new cMessage("end-service");
 
-    isPreemptive = par("isPreemptive");
+    isPreemptive = par("preemptive");
+    preemptiveResume = par("resume");
     numPrio = par("numPrio"); //number of priority queues
+
+    rng = new cMersenneTwister();
+    serviceTimes = cStringTokenizer(par("serviceTimes")).asDoubleVector();
 
     for(int i = 0; i < numPrio; i++){
         //creating #queues that equals the # of priorities
         //NB the queues are ordered. The most important is queues[0] and than come the others
        queues.add(new cQueue(std::to_string(i).c_str())); //creating queue with name = priority
+       workStart = SIMTIME_ZERO;
    }
 
     qlenSignal = registerSignal("qlen");
@@ -66,7 +75,7 @@ void Queue::initialize()
     queueingTimeSignal = registerSignal("queueingTime");
     responseTimeSignal = registerSignal("responseTime");
 
-    emit(qlenSignal, check_and_cast<cQueue*>(queues.get(0))->getLength());//temp, change this
+    emit(qlenSignal, getTotalQueueLength());
     emit(busySignal, false);
 }
 
@@ -91,15 +100,16 @@ void Queue::handleMessage(cMessage *msg)
         /*else { //good if you want to be more concise
             PriorityMessage *test;
             if ((test=getMsgPtrToServe())){
-                int priority = test->getPriority();
                 msgServiced = test;
 
                 //Waiting time: time from msg arrival to time msg enters the server (now)
                 emit(queueingTimeSignal, simTime() - msgServiced->getTimestamp());
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
-                simtime_t serviceTime = getServiceTimeForPriority(priority);
-                scheduleAt(simTime()+serviceTime, endServiceMsg);
+                simtime_t serviceTime = getServiceTimeForPriority(msgServiced->getPriority());
+
+                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - msgServiced->getWorkTime(), endServiceMsg);
+                else scheduleAt(simTime() + serviceTime, endServiceMsg);
             }
         }*/
 
@@ -110,23 +120,26 @@ void Queue::handleMessage(cMessage *msg)
                 cQueue *queue = check_and_cast<cQueue*>(queues.get(notEmpty)); //taking the most important queue that is not empty
 
                 PriorityMessage *m = (PriorityMessage*)(queue->pop());
-                int priority = m->getPriority();
+                emit(qlenSignal, getTotalQueueLength()); //Queue length changed, emit new length!
 
                 msgServiced = m; //serving the message
-                emit(qlenSignal, queue->getLength()); //Queue length changed, emit new length!
 
                 //Waiting time: time from msg arrival to time msg enters the server (now)
                 emit(queueingTimeSignal, simTime() - msgServiced->getTimestamp());
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
-                simtime_t serviceTime = getServiceTimeForPriority(priority);
+                simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
                 EV << "with service time of " << serviceTime.str() << "s" << endl;
-                scheduleAt(simTime()+serviceTime, endServiceMsg);
+
+                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - m->getWorkTime(), endServiceMsg);
+                else scheduleAt(simTime() + serviceTime, endServiceMsg);
+
+                workStart = simTime();
+                emit(busySignal, true);
             }
         }
     }
     else { // Data msg has arrived
-
         if(isPreemptive){ //check if the server is preemptive
 
             PriorityMessage* msgInService = (PriorityMessage*)msgServiced;
@@ -134,21 +147,26 @@ void Queue::handleMessage(cMessage *msg)
 
             if(msgServiced && msgInService->getPriority() > arrivedMsg->getPriority()){//NB look at the condition ">".
                 //if there's someone with less priority, kick him away
-                bubble("Preemption occurred!");
-                EV << "Message " << msgServiced->getName() << " was thrown out because of preemption" << endl;
 
                 ((cQueue*)queues.get(msgInService->getPriority()))->insert(msgInService); //putting the msg in service away
+                bubble("Preemption occurred!");
+                EV << "Message " << msgServiced->getName() << " was thrown out because of preemption" << endl;
+                emit(qlenSignal, getTotalQueueLength());
                 EV << "Message " << msgServiced->getName() << " is back in queue" << endl;
-
                 cancelEvent(endServiceMsg);
 
+                if(preemptiveResume) msgInService->setWorkTime(simTime() - workStart); // if we have to resume later, we save the work time that's already been done
+
                 msgServiced = arrivedMsg;
-                int priority = arrivedMsg->getPriority();
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
-                simtime_t serviceTime = getServiceTimeForPriority(priority);
+                simtime_t serviceTime = getServiceTimeForPriority(arrivedMsg->getPriority());
                 EV << "with service time of " << serviceTime.str() << "s" << endl;
-                scheduleAt(simTime()+serviceTime, endServiceMsg);
+
+                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - arrivedMsg->getWorkTime(), endServiceMsg);
+                else scheduleAt(simTime() + serviceTime, endServiceMsg);
+
+                workStart = simTime();
             }
 
         }//end of if(isPreemptive)
@@ -158,14 +176,17 @@ void Queue::handleMessage(cMessage *msg)
 
         if (!msgServiced) { //No message in service (server IDLE) ==> No queue ==> Direct service
 
-
             PriorityMessage *m = check_and_cast<PriorityMessage*>(msg);
             msgServiced = m;
             emit(queueingTimeSignal, SIMTIME_ZERO);
 
             EV << "Starting service of " << msgServiced->getName() << endl;
             simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
-            scheduleAt(simTime()+serviceTime, endServiceMsg);
+
+            if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - m->getWorkTime(), endServiceMsg);
+            else scheduleAt(simTime() + serviceTime, endServiceMsg);
+
+            workStart = simTime();
             emit(busySignal, true);
         }
         else if(strcmp(msgServiced->getName(), msg->getName()) != 0){  //if needed for preemption
@@ -175,7 +196,7 @@ void Queue::handleMessage(cMessage *msg)
 
             int prio = ((PriorityMessage*)msg)->getPriority();
             ((cQueue*)(queues.get(prio)))->insert(((PriorityMessage*)msg));
-
+            emit(qlenSignal, getTotalQueueLength());
        }
     }
 }// end of handleMessage
@@ -201,11 +222,11 @@ PriorityMessage* Queue::getMsgPtrToServe(){
 
                 int len = c->getLength();
                 ASSERT(len > 0);
+
                 PriorityMessage *m = check_and_cast<PriorityMessage*>(c->pop());
 
-                emit(qlenSignal, len); //Queue length changed, emit new length!
-
-                ASSERT(len -1 == c->getLength()); // checking if the element was really popped
+                emit(qlenSignal, getTotalQueueLength()); //Queue length changed, emit new length!
+                ASSERT(len-1 == c->getLength()); // checking if the element was really popped
                 return m;
             }
         }
@@ -214,40 +235,20 @@ PriorityMessage* Queue::getMsgPtrToServe(){
 }
 
 double Queue::getServiceTimeForPriority(int priority){
-    if(priority >= 0 && priority < numPrio){
-            switch (priority) {
-                case 0:
-                    return par("serviceTime1").doubleValue();
-                case 1:
-                        return par("serviceTime2").doubleValue();
-                case 2:
-                        return par("serviceTime3").doubleValue();
-                case 3:
-                        return par("serviceTime4").doubleValue();
-                case 4:
-                        return par("serviceTime5").doubleValue();
-                default:
-                        return Queue::randomTime();
-            }
-        }
+    if(priority >= 0 && priority < numPrio && serviceTimes.size() > 0){
+        if (priority <= (serviceTimes.size() - 1)) return omnetpp::exponential(rng, serviceTimes.at(priority)); // if the serviceTimes array has enough values, return the correct one
+        else return omnetpp::exponential(rng, serviceTimes.at(rand() % serviceTimes.size())); // otherwise just return a random time out of all the available ones
+    }
 
-        return 0;
+    return 0;
 }
 
-double Queue::randomTime(){
-    switch (rand() % numPrio){
-    case 0:
-        return par("serviceTime1").doubleValue();
-    case 1:
-        return par("serviceTime2").doubleValue();
-    case 2:
-        return par("serviceTime3").doubleValue();
-    case 3:
-        return par("serviceTime4").doubleValue();
-    case 4:
-        return par("serviceTime5").doubleValue();
-    default:
-        return par("serviceTime1").doubleValue();
-
+long Queue::getTotalQueueLength(){
+    long len = 0;
+    for (int i = 0; i < queues.size(); i++){
+        if (cQueue *queue = check_and_cast<cQueue*>(queues[i])){
+            len += queue->getLength();
+        }
     }
+    return len;
 }
