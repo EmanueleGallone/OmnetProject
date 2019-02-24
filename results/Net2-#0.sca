@@ -1,14 +1,14 @@
 version 2
-run Net3-0-20190223-11:36:19-25408
-attr configname Net3
-attr datetime 20190223-11:36:19
-attr experiment Net3
+run Net2-0-20190224-12:26:48-7941
+attr configname Net2
+attr datetime 20190224-12:26:48
+attr experiment Net2
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 25408
+attr processid 7941
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -17,55 +17,107 @@ attr seedset 0
 param **.gen.numPrio 5
 param **.queue.numPrio 5
 param **.queue.preemptive true
-param **.queue.resume true
+param **.queue.resume false
 param **.gen.interArrivalTimes "\"0.20 0.25 0.30 0.35 0.40\""
 param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 
-scalar Net.sink arrivedMsg:last -nan
+scalar Net.sink arrivedMsg:last 8
 attr interpolationmode none
 attr title "number of arrived msg, last"
 statistic Net.sink lifetime:histogram
-field count 0
-field mean -nan
-field stddev -nan
-field min -nan
-field max -nan
-field sum 0
-field sqrsum 0
+field count 8
+field mean 0.824869413285
+field stddev 0.61590072141913
+field min 0.373550566189
+field max 2.186758364799
+field sum 6.59895530628
+field sqrsum 8.0986122822974
 attr interpolationmode none
 attr title "lifetime of arrived msg, histogram"
 attr unit s
 bin	-inf	0
 bin	0	0
+bin	0.05	0
+bin	0.1	0
+bin	0.15	0
+bin	0.2	0
+bin	0.25	0
+bin	0.3	0
+bin	0.35	1
+bin	0.4	0
+bin	0.45	2
+bin	0.5	1
+bin	0.55	0
+bin	0.6	1
+bin	0.65	1
+bin	0.7	0
+bin	0.75	0
+bin	0.8	0
+bin	0.85	0
+bin	0.9	0
+bin	0.95	0
 bin	1	0
-scalar Net.sink lifetime:mean -nan
+bin	1.05	0
+bin	1.1	0
+bin	1.15	0
+bin	1.2	0
+bin	1.25	1
+bin	1.3	0
+bin	1.35	0
+bin	1.4	0
+bin	1.45	0
+bin	1.5	0
+bin	1.55	0
+bin	1.6	0
+bin	1.65	0
+bin	1.7	0
+bin	1.75	0
+bin	1.8	0
+bin	1.85	0
+bin	1.9	0
+bin	1.95	0
+bin	2	0
+bin	2.05	0
+bin	2.1	0
+bin	2.15	1
+bin	2.2	0
+bin	2.25	0
+bin	2.3	0
+bin	2.35	0
+bin	2.4	0
+bin	2.45	0
+bin	2.5	0
+bin	2.55	0
+bin	2.6	0
+bin	2.65	0
+scalar Net.sink lifetime:mean 0.824869413285
 attr interpolationmode none
 attr title "lifetime of arrived msg, mean"
 attr unit s
-scalar Net.sink lifetime:max -nan
+scalar Net.sink lifetime:max 2.186758364799
 attr interpolationmode none
 attr title "lifetime of arrived msg, max"
 attr unit s
-scalar Net.queue responseTime:mean -nan
+scalar Net.queue responseTime:mean 0.524869413285
 attr interpolationmode none
 attr title "response time at end of service, mean"
 attr unit s
-scalar Net.queue responseTime:max -nan
+scalar Net.queue responseTime:max 1.886758364799
 attr interpolationmode none
 attr title "response time at end of service, max"
 attr unit s
-scalar Net.queue queueingTime:mean -nan
+scalar Net.queue queueingTime:mean 0.583916482101
 attr interpolationmode none
 attr title "queueing time at dequeue, mean"
 attr unit s
-scalar Net.queue queueingTime:max -nan
+scalar Net.queue queueingTime:max 1.362052508162
 attr interpolationmode none
 attr title "queueing time at dequeue, max"
 attr unit s
-scalar Net.queue busy:timeavg -nan
+scalar Net.queue busy:timeavg 0.90586501868133
 attr interpolationmode sample-hold
 attr title "server busy state, timeavg"
-scalar Net.queue qlen:timeavg -nan
+scalar Net.queue qlen:timeavg 1.9147340974876
 attr interpolationmode sample-hold
 attr title "queue length, timeavg"
 

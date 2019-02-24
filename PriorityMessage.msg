@@ -19,5 +19,5 @@
 message PriorityMessage {
     int priority;
     string content;
-    simtime_t workTime;
+    simtime_t workLeft;
 }

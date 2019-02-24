@@ -59,7 +59,7 @@ void Source::handleMessage(cMessage *msg)
     sprintf(msgname, "message-%d-priority-%d", ++generatedMsgCounter[priority], priority);
     PriorityMessage *message = new PriorityMessage(msgname);
     message->setPriority(priority);
-    message->setWorkTime(SIMTIME_ZERO);
+    message->setWorkLeft(SIMTIME_ZERO);
 
     send(message, "out");
 

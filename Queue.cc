@@ -13,7 +13,7 @@ class Queue : public cSimpleModule
     int numPrio;
     bool isPreemptive;
     bool preemptiveResume;
-    simtime_t workStart;
+    simtime_t workEnd; // needed for preemptive resume
     cMersenneTwister* rng; // random number generator
     std::vector<double> serviceTimes;
 
@@ -67,7 +67,7 @@ void Queue::initialize()
         //creating #queues that equals the # of priorities
         //NB the queues are ordered. The most important is queues[0] and than come the others
        queues.add(new cQueue(std::to_string(i).c_str())); //creating queue with name = priority
-       workStart = SIMTIME_ZERO;
+       workEnd = SIMTIME_ZERO;
    }
 
     qlenSignal = registerSignal("qlen");
@@ -131,10 +131,13 @@ void Queue::handleMessage(cMessage *msg)
                 simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
                 EV << "with service time of " << serviceTime.str() << "s" << endl;
 
-                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - m->getWorkTime(), endServiceMsg);
-                else scheduleAt(simTime() + serviceTime, endServiceMsg);
+                auto time = SIMTIME_ZERO;
+                if (isPreemptive && preemptiveResume && m->getWorkLeft() > 0) time = simTime() + m->getWorkLeft();
+                else time = simTime() + serviceTime;
 
-                workStart = simTime();
+                workEnd = time;
+                scheduleAt(time, endServiceMsg);
+
                 emit(busySignal, true);
             }
         }
@@ -155,7 +158,10 @@ void Queue::handleMessage(cMessage *msg)
                 EV << "Message " << msgServiced->getName() << " is back in queue" << endl;
                 cancelEvent(endServiceMsg);
 
-                if(preemptiveResume) msgInService->setWorkTime(simTime() - workStart); // if we have to resume later, we save the work time that's already been done
+                if(preemptiveResume){
+                    msgInService->setWorkLeft(workEnd - simTime()); // if we have to resume later, we save the work time that's already been done
+                    EV << "Message " << msgInService->getName() << " has " << msgInService->getWorkLeft() << " work time left" << endl;
+                }
 
                 msgServiced = arrivedMsg;
 
@@ -163,10 +169,12 @@ void Queue::handleMessage(cMessage *msg)
                 simtime_t serviceTime = getServiceTimeForPriority(arrivedMsg->getPriority());
                 EV << "with service time of " << serviceTime.str() << "s" << endl;
 
-                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - arrivedMsg->getWorkTime(), endServiceMsg);
-                else scheduleAt(simTime() + serviceTime, endServiceMsg);
+                auto time = SIMTIME_ZERO;
+                if (isPreemptive && preemptiveResume && arrivedMsg->getWorkLeft() > 0) time = simTime() + arrivedMsg->getWorkLeft();
+                else time = simTime() + serviceTime;
 
-                workStart = simTime();
+                workEnd = time;
+                scheduleAt(time, endServiceMsg);
             }
 
         }//end of if(isPreemptive)
@@ -183,10 +191,13 @@ void Queue::handleMessage(cMessage *msg)
             EV << "Starting service of " << msgServiced->getName() << endl;
             simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
 
-            if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - m->getWorkTime(), endServiceMsg);
-            else scheduleAt(simTime() + serviceTime, endServiceMsg);
+            auto time = SIMTIME_ZERO;
+            if (isPreemptive && preemptiveResume && m->getWorkLeft() > 0) time = simTime() + m->getWorkLeft();
+            else time = simTime() + serviceTime;
 
-            workStart = simTime();
+            workEnd = time;
+            scheduleAt(time, endServiceMsg);
+
             emit(busySignal, true);
         }
         else if(strcmp(msgServiced->getName(), msg->getName()) != 0){  //if needed for preemption

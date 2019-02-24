@@ -1,15 +1,15 @@
-file 2502448 1550948796                                         
+file 1689 1551030021                                            
 version 2
-run Net1-0-20190223-20:06:25-1297
+run Net1-0-20190224-11:17:57-1673
 attr configname Net1
-attr datetime 20190223-20:06:25
+attr datetime 20190224-11:17:57
 attr experiment Net1
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 1297
+attr processid 1673
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -24,24 +24,23 @@ param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 vector 0 Net.queue qlen:vector ETV
 attr interpolationmode sample-hold
 attr title "queue length, vector"
+0	1143 72 0 21 0 1.934901514845 4 0 1 2 2
 vector 1 Net.queue queueingTime:vector ETV
 attr interpolationmode none
 attr title "queueing time at dequeue, vector"
 attr unit s
+1	1215 109 2 19 0.3 1.673989645901 5 0 0.051872048559 0.051872048559 0.0026907094217073
 vector 2 Net.queue responseTime:vector ETV
 attr interpolationmode none
 attr title "response time at end of service, vector"
 attr unit s
+2	1324 138 3 17 0.354323406578 1.666890240747 4 0.022174540618 0.349426363835 0.522923933643 0.13495045328368
 vector 3 Net.sink lifetime:vector ETV
 attr interpolationmode none
 attr title "lifetime of arrived msg, vector"
 attr unit s
+3	1462 139 4 18 0.354323406578 1.666890240747 4 0.322174540618 0.649426363835 1.722923933643 0.80870481346948
 vector 4 Net.sink arrivedMsg:vector ETV
 attr interpolationmode none
 attr title "number of arrived msg, vector"
-0	1143 678110 0 48097 0 3599.983697283477 23845 0 181 1501266 142758766
-1	679253 484865 4 48097 0.3 3599.983697283477 12025 0 272.37248855402 223364.99030586 29732052.70097
-2	1164118 486170 7 48097 0.653158559896 3599.983697283477 12024 0.002641279283 272.56439919424 226930.66253335 29901178.664808
-3	1650288 486187 8 48098 0.653158559896 3599.983697283477 12024 0.302641279283 272.86439919424 230537.86253335 30038419.222328
-4	2136475 365972 8 48098 0.653158559896 3599.983697283477 12024 1 12024 72294300 579535206900
-
+4	1601 88 4 18 0.354323406578 1.666890240747 4 1 4 10 30

@@ -1,14 +1,14 @@
 version 2
-run Net3-0-20190223-11:36:19-25408
+run Net3-0-20190224-18:42:52-6399
 attr configname Net3
-attr datetime 20190223-11:36:19
+attr datetime 20190224-18:42:52
 attr experiment Net3
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 25408
+attr processid 6399
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -24,5 +24,61 @@ param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 vector 0 Net.queue qlen:vector ETV
 attr interpolationmode sample-hold
 attr title "queue length, vector"
+vector 1 Net.queue queueingTime:vector ETV
+attr interpolationmode none
+attr title "queueing time at dequeue, vector"
+attr unit s
+vector 2 Net.queue responseTime:vector ETV
+attr interpolationmode none
+attr title "response time at end of service, vector"
+attr unit s
+vector 3 Net.sink lifetime:vector ETV
+attr interpolationmode none
+attr title "lifetime of arrived msg, vector"
+attr unit s
+vector 4 Net.sink arrivedMsg:vector ETV
+attr interpolationmode none
+attr title "number of arrived msg, vector"
 0	0	0	0
+0	17	2.067341180496	1
+0	19	2.195167991017	0
+0	21	2.34927814888	1
+0	22	2.378867340471	2
+0	24	2.534814646916	1
+0	26	2.749815809864	0
+0	28	2.758683106295	1
+0	29	2.777195741343	0
+1	2	0.3	0
+1	6	0.903161169718	0
+1	10	1.633546008423	0
+1	16	2.065691937932	0
+1	19	2.195167991017	0.127826810521
+1	24	2.534814646916	0.155947306445
+1	26	2.749815809864	0.682474629368
+1	29	2.777195741343	0.709854560847
+1	34	3.428495568868	0
+2	3	0.334014601234	0.034014601234
+2	8	1.352068114305	0.448906944587
+2	13	1.880627903755	0.247081895332
+2	19	2.195167991017	0.129476053085
+2	24	2.534814646916	0.185536498036
+2	26	2.749815809864	0.370948469393
+2	29	2.777195741343	0.018512635048
+2	31	2.803821246066	0.73648006557
+3	4	0.334014601234	0.334014601234
+3	9	1.352068114305	0.748906944587
+3	14	1.880627903755	0.547081895332
+3	20	2.195167991017	0.429476053085
+3	25	2.534814646916	0.485536498036
+3	27	2.749815809864	0.670948469393
+3	30	2.777195741343	0.318512635048
+3	32	2.803821246066	1.03648006557
+4	4	0.334014601234	1
+4	9	1.352068114305	2
+4	14	1.880627903755	3
+4	20	2.195167991017	4
+4	25	2.534814646916	5
+4	27	2.749815809864	6
+4	30	2.777195741343	7
+4	32	2.803821246066	8
 

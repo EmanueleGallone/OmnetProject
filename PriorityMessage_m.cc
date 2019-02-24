@@ -182,7 +182,7 @@ Register_Class(PriorityMessage)
 PriorityMessage::PriorityMessage(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
     this->priority = 0;
-    this->workTime = 0;
+    this->workLeft = 0;
 }
 
 PriorityMessage::PriorityMessage(const PriorityMessage& other) : ::omnetpp::cMessage(other)
@@ -206,7 +206,7 @@ void PriorityMessage::copy(const PriorityMessage& other)
 {
     this->priority = other.priority;
     this->content = other.content;
-    this->workTime = other.workTime;
+    this->workLeft = other.workLeft;
 }
 
 void PriorityMessage::parsimPack(omnetpp::cCommBuffer *b) const
@@ -214,7 +214,7 @@ void PriorityMessage::parsimPack(omnetpp::cCommBuffer *b) const
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->priority);
     doParsimPacking(b,this->content);
-    doParsimPacking(b,this->workTime);
+    doParsimPacking(b,this->workLeft);
 }
 
 void PriorityMessage::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -222,7 +222,7 @@ void PriorityMessage::parsimUnpack(omnetpp::cCommBuffer *b)
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->priority);
     doParsimUnpacking(b,this->content);
-    doParsimUnpacking(b,this->workTime);
+    doParsimUnpacking(b,this->workLeft);
 }
 
 int PriorityMessage::getPriority() const
@@ -245,14 +245,14 @@ void PriorityMessage::setContent(const char * content)
     this->content = content;
 }
 
-::omnetpp::simtime_t PriorityMessage::getWorkTime() const
+::omnetpp::simtime_t PriorityMessage::getWorkLeft() const
 {
-    return this->workTime;
+    return this->workLeft;
 }
 
-void PriorityMessage::setWorkTime(::omnetpp::simtime_t workTime)
+void PriorityMessage::setWorkLeft(::omnetpp::simtime_t workLeft)
 {
-    this->workTime = workTime;
+    this->workLeft = workLeft;
 }
 
 class PriorityMessageDescriptor : public omnetpp::cClassDescriptor
@@ -350,7 +350,7 @@ const char *PriorityMessageDescriptor::getFieldName(int field) const
     static const char *fieldNames[] = {
         "priority",
         "content",
-        "workTime",
+        "workLeft",
     };
     return (field>=0 && field<3) ? fieldNames[field] : nullptr;
 }
@@ -361,7 +361,7 @@ int PriorityMessageDescriptor::findField(const char *fieldName) const
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='p' && strcmp(fieldName, "priority")==0) return base+0;
     if (fieldName[0]=='c' && strcmp(fieldName, "content")==0) return base+1;
-    if (fieldName[0]=='w' && strcmp(fieldName, "workTime")==0) return base+2;
+    if (fieldName[0]=='w' && strcmp(fieldName, "workLeft")==0) return base+2;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -447,7 +447,7 @@ std::string PriorityMessageDescriptor::getFieldValueAsString(void *object, int f
     switch (field) {
         case 0: return long2string(pp->getPriority());
         case 1: return oppstring2string(pp->getContent());
-        case 2: return simtime2string(pp->getWorkTime());
+        case 2: return simtime2string(pp->getWorkLeft());
         default: return "";
     }
 }
@@ -464,7 +464,7 @@ bool PriorityMessageDescriptor::setFieldValueAsString(void *object, int field, i
     switch (field) {
         case 0: pp->setPriority(string2long(value)); return true;
         case 1: pp->setContent((value)); return true;
-        case 2: pp->setWorkTime(string2simtime(value)); return true;
+        case 2: pp->setWorkLeft(string2simtime(value)); return true;
         default: return false;
     }
 }
