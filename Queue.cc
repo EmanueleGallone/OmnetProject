@@ -22,8 +22,24 @@ class Queue : public cSimpleModule
 
     simsignal_t qlenSignal;
     simsignal_t busySignal;
+
+    // Global
     simsignal_t queueingTimeSignal;
-    simsignal_t responseTimeSignal;
+
+    simsignal_t eServiceTimeSignal;
+
+    // Per-class
+    simsignal_t queueingTimeSignal0;
+    simsignal_t queueingTimeSignal1;
+    simsignal_t queueingTimeSignal2;
+    simsignal_t queueingTimeSignal3;
+    simsignal_t queueingTimeSignal4;
+
+    simsignal_t eServiceTimeSignal0;
+    simsignal_t eServiceTimeSignal1;
+    simsignal_t eServiceTimeSignal2;
+    simsignal_t eServiceTimeSignal3;
+    simsignal_t eServiceTimeSignal4;
 
   public:
     Queue();
@@ -72,8 +88,24 @@ void Queue::initialize()
 
     qlenSignal = registerSignal("qlen");
     busySignal = registerSignal("busy");
+
+    // Global
     queueingTimeSignal = registerSignal("queueingTime");
-    responseTimeSignal = registerSignal("responseTime");
+
+    eServiceTimeSignal = registerSignal("eServiceTime");
+
+    // Per-class
+    queueingTimeSignal0 = registerSignal("queueingTime0");
+    queueingTimeSignal1 = registerSignal("queueingTime1");
+    queueingTimeSignal2 = registerSignal("queueingTime2");
+    queueingTimeSignal3 = registerSignal("queueingTime3");
+    queueingTimeSignal4 = registerSignal("queueingTime4");
+
+    eServiceTimeSignal0 = registerSignal("eServiceTime0");
+    eServiceTimeSignal1 = registerSignal("eServiceTime1");
+    eServiceTimeSignal2 = registerSignal("eServiceTime2");
+    eServiceTimeSignal3 = registerSignal("eServiceTime3");
+    eServiceTimeSignal4 = registerSignal("eServiceTime4");
 
     emit(qlenSignal, getTotalQueueLength());
     emit(busySignal, false);
@@ -85,10 +117,25 @@ void Queue::handleMessage(cMessage *msg)
     if (msg == endServiceMsg) { // Self-message arrived
 
         EV << "Completed service of " << msgServiced->getName() << endl;
-        send(msgServiced, "out");
+        auto prioMsg = (PriorityMessage*)msgServiced;
+        auto qTime = prioMsg->getQueueingTime();
+        auto esTime = simTime() - prioMsg->getWorkStart();
 
-        //Response time: time from msg arrival timestamp to time msg ends service (now)
-        emit(responseTimeSignal, simTime() - msgServiced->getTimestamp());
+        // Global
+        emit(queueingTimeSignal, qTime);
+        emit(eServiceTimeSignal, esTime);
+
+        // Per-class
+        switch (prioMsg->getPriority()){
+            case 0: emit(queueingTimeSignal0, qTime); emit(eServiceTimeSignal0, esTime); break;
+            case 1: emit(queueingTimeSignal1, qTime); emit(eServiceTimeSignal1, esTime); break;
+            case 2: emit(queueingTimeSignal2, qTime); emit(eServiceTimeSignal2, esTime); break;
+            case 3: emit(queueingTimeSignal3, qTime); emit(eServiceTimeSignal3, esTime); break;
+            case 4: emit(queueingTimeSignal4, qTime); emit(eServiceTimeSignal4, esTime); break;
+            default: break;
+        }
+
+        send(msgServiced, "out");
 
         if (getMsgToServe() == -1) { // Empty queue, server goes in IDLE
 
@@ -122,10 +169,13 @@ void Queue::handleMessage(cMessage *msg)
                 PriorityMessage *m = (PriorityMessage*)(queue->pop());
                 emit(qlenSignal, getTotalQueueLength()); //Queue length changed, emit new length!
 
-                msgServiced = m; //serving the message
+                if(m->getTimestamp() != SIMTIME_ZERO) // If the user has ever been in a queue
+                    m->setQueueingTime(m->getQueueingTime() + (simTime() - m->getTimestamp())); // We increase the total queueing time of the message (so far)
 
-                //Waiting time: time from msg arrival to time msg enters the server (now)
-                emit(queueingTimeSignal, simTime() - msgServiced->getTimestamp());
+                if(m->getWorkStart() == SIMTIME_ZERO) // If the user has never been in service
+                    m->setWorkStart(simTime()); // We set it to the present, this will not be modified anymore until the service for this message is completed
+
+                msgServiced = m; //serving the message
 
                 EV << "Starting service of " << msgServiced->getName() << endl;
                 simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
@@ -152,6 +202,7 @@ void Queue::handleMessage(cMessage *msg)
                 //if there's someone with less priority, kick him away
 
                 ((cQueue*)queues.get(msgInService->getPriority()))->insert(msgInService); //putting the msg in service away
+                msgInService->setTimestamp(simTime()); // We set the timestamp to the moment the message was put back in the queue
                 bubble("Preemption occurred!");
                 EV << "Message " << msgServiced->getName() << " was thrown out because of preemption" << endl;
                 emit(qlenSignal, getTotalQueueLength());
@@ -175,6 +226,7 @@ void Queue::handleMessage(cMessage *msg)
 
                 workEnd = time;
                 scheduleAt(time, endServiceMsg);
+                arrivedMsg->setWorkStart(simTime());
             }
 
         }//end of if(isPreemptive)
@@ -186,7 +238,6 @@ void Queue::handleMessage(cMessage *msg)
 
             PriorityMessage *m = check_and_cast<PriorityMessage*>(msg);
             msgServiced = m;
-            emit(queueingTimeSignal, SIMTIME_ZERO);
 
             EV << "Starting service of " << msgServiced->getName() << endl;
             simtime_t serviceTime = getServiceTimeForPriority(m->getPriority());
@@ -197,6 +248,8 @@ void Queue::handleMessage(cMessage *msg)
 
             workEnd = time;
             scheduleAt(time, endServiceMsg);
+            m->setWorkStart(simTime());
+            m->setQueueingTime(SIMTIME_ZERO);
 
             emit(busySignal, true);
         }
@@ -205,9 +258,10 @@ void Queue::handleMessage(cMessage *msg)
 
             EV << "Queuing " << msg->getName() << endl;
 
-            int prio = ((PriorityMessage*)msg)->getPriority();
-            ((cQueue*)(queues.get(prio)))->insert(((PriorityMessage*)msg));
+            PriorityMessage* prioMsg = (PriorityMessage*)msg;
+            ((cQueue*)(queues.get(prioMsg->getPriority())))->insert(prioMsg);
             emit(qlenSignal, getTotalQueueLength());
+            prioMsg->setTimestamp(simTime()); // We set the timestamp to when the message arrived in the queue
        }
     }
 }// end of handleMessage

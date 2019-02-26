@@ -29,6 +29,8 @@
  *     int priority;
  *     string content;
  *     simtime_t workLeft;
+ *     simtime_t queueingTime;
+ *     simtime_t workStart;
  * }
  * </pre>
  */
@@ -38,6 +40,8 @@ class PriorityMessage : public ::omnetpp::cMessage
     int priority;
     ::omnetpp::opp_string content;
     ::omnetpp::simtime_t workLeft;
+    ::omnetpp::simtime_t queueingTime;
+    ::omnetpp::simtime_t workStart;
 
   private:
     void copy(const PriorityMessage& other);
@@ -62,6 +66,10 @@ class PriorityMessage : public ::omnetpp::cMessage
     virtual void setContent(const char * content);
     virtual ::omnetpp::simtime_t getWorkLeft() const;
     virtual void setWorkLeft(::omnetpp::simtime_t workLeft);
+    virtual ::omnetpp::simtime_t getQueueingTime() const;
+    virtual void setQueueingTime(::omnetpp::simtime_t queueingTime);
+    virtual ::omnetpp::simtime_t getWorkStart() const;
+    virtual void setWorkStart(::omnetpp::simtime_t workStart);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const PriorityMessage& obj) {obj.parsimPack(b);}

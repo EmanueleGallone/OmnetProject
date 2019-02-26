@@ -20,4 +20,6 @@ message PriorityMessage {
     int priority;
     string content;
     simtime_t workLeft;
+    simtime_t queueingTime;
+    simtime_t workStart;
 }

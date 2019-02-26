@@ -60,6 +60,9 @@ void Source::handleMessage(cMessage *msg)
     PriorityMessage *message = new PriorityMessage(msgname);
     message->setPriority(priority);
     message->setWorkLeft(SIMTIME_ZERO);
+    message->setQueueingTime(SIMTIME_ZERO);
+    message->setTimestamp(SIMTIME_ZERO);
+    message->setWorkStart(SIMTIME_ZERO);
 
     send(message, "out");
 

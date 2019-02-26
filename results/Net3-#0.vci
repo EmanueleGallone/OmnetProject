@@ -1,15 +1,15 @@
-file 2318 1551030220                                            
+file 679 1551117485                                             
 version 2
-run Net3-0-20190224-18:42:52-6399
+run Net3-0-20190225-18:58:03-1556
 attr configname Net3
-attr datetime 20190224-18:42:52
+attr datetime 20190225-18:58:03
 attr experiment Net3
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 6399
+attr processid 1556
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -25,24 +25,5 @@ param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 vector 0 Net.queue qlen:vector ETV
 attr interpolationmode sample-hold
 attr title "queue length, vector"
-vector 1 Net.queue queueingTime:vector ETV
-attr interpolationmode none
-attr title "queueing time at dequeue, vector"
-attr unit s
-vector 2 Net.queue responseTime:vector ETV
-attr interpolationmode none
-attr title "response time at end of service, vector"
-attr unit s
-vector 3 Net.sink lifetime:vector ETV
-attr interpolationmode none
-attr title "lifetime of arrived msg, vector"
-attr unit s
-vector 4 Net.sink arrivedMsg:vector ETV
-attr interpolationmode none
-attr title "number of arrived msg, vector"
-0	1169 183 0 29 0 2.777195741343 9 0 2 6 8
-1	1352 237 2 34 0.3 3.428495568868 9 0 0.709854560847 1.676103307181 1.0103243731617
-2	1589 277 3 31 0.334014601234 2.803821246066 8 0.018512635048 0.73648006557 2.170957162285 0.99526011300575
-3	1866 277 4 32 0.334014601234 2.803821246066 8 0.318512635048 1.03648006557 4.570957162285 3.0178344103768
-4	2143 174 4 32 0.334014601234 2.803821246066 8 1 8 36 204
+0	670 8 0 0 0 0 1 0 0 0 0
 
