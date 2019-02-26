@@ -49,7 +49,6 @@ class Queue : public cSimpleModule
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
     virtual int getMsgToServe();
-    virtual PriorityMessage* getMsgPtrToServe();
     virtual double getServiceTimeForPriority(int priority);
     virtual long getTotalQueueLength();
 };
@@ -144,21 +143,6 @@ void Queue::handleMessage(cMessage *msg)
             emit(busySignal, false);
 
         }
-        /*else { //good if you want to be more concise
-            PriorityMessage *test;
-            if ((test=getMsgPtrToServe())){
-                msgServiced = test;
-
-                //Waiting time: time from msg arrival to time msg enters the server (now)
-                emit(queueingTimeSignal, simTime() - msgServiced->getTimestamp());
-
-                EV << "Starting service of " << msgServiced->getName() << endl;
-                simtime_t serviceTime = getServiceTimeForPriority(msgServiced->getPriority());
-
-                if (isPreemptive && preemptiveResume) scheduleAt(simTime() + serviceTime - msgServiced->getWorkTime(), endServiceMsg);
-                else scheduleAt(simTime() + serviceTime, endServiceMsg);
-            }
-        }*/
 
         else { // Queue contains users
 
@@ -277,26 +261,6 @@ int Queue::getMsgToServe(){
     }
     //if they are all empty, return -1
     return -1;
-}
-
-PriorityMessage* Queue::getMsgPtrToServe(){
-    //other version. this one returns the message instead of index
-    for(int i = 0; i <= queues.size()-1; i++){
-            cQueue *c = (cQueue*)(queues.get(i));
-            if(c && !c->isEmpty()){
-
-                int len = c->getLength();
-                ASSERT(len > 0);
-
-                PriorityMessage *m = check_and_cast<PriorityMessage*>(c->pop());
-
-                emit(qlenSignal, getTotalQueueLength()); //Queue length changed, emit new length!
-                ASSERT(len-1 == c->getLength()); // checking if the element was really popped
-                return m;
-            }
-        }
-        //if they are all empty, return nullptr
-        return nullptr;
 }
 
 double Queue::getServiceTimeForPriority(int priority){

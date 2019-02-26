@@ -1,15 +1,15 @@
-file 679 1551117485                                             
+file 1247 1551208234                                            
 version 2
-run Net3-0-20190225-18:58:03-1556
+run Net3-0-20190226-20:09:58-6921
 attr configname Net3
-attr datetime 20190225-18:58:03
+attr datetime 20190226-20:09:58
 attr experiment Net3
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvarsf ""
 attr measurement ""
 attr network Net
-attr processid 1556
+attr processid 6921
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -25,5 +25,5 @@ param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
 vector 0 Net.queue qlen:vector ETV
 attr interpolationmode sample-hold
 attr title "queue length, vector"
-0	670 8 0 0 0 0 1 0 0 0 0
+0	670 576 0 53 0 3.169967650584 27 0 8 109 601
 

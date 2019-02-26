@@ -27,7 +27,6 @@
  * message PriorityMessage
  * {
  *     int priority;
- *     string content;
  *     simtime_t workLeft;
  *     simtime_t queueingTime;
  *     simtime_t workStart;
@@ -38,7 +37,6 @@ class PriorityMessage : public ::omnetpp::cMessage
 {
   protected:
     int priority;
-    ::omnetpp::opp_string content;
     ::omnetpp::simtime_t workLeft;
     ::omnetpp::simtime_t queueingTime;
     ::omnetpp::simtime_t workStart;
@@ -62,8 +60,6 @@ class PriorityMessage : public ::omnetpp::cMessage
     // field getter/setter methods
     virtual int getPriority() const;
     virtual void setPriority(int priority);
-    virtual const char * getContent() const;
-    virtual void setContent(const char * content);
     virtual ::omnetpp::simtime_t getWorkLeft() const;
     virtual void setWorkLeft(::omnetpp::simtime_t workLeft);
     virtual ::omnetpp::simtime_t getQueueingTime() const;

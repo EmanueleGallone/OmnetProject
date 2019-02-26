@@ -1,0 +1,102 @@
+version 2
+run Net3-0-20190226-20:09:58-6921
+attr configname Net3
+attr datetime 20190226-20:09:58
+attr experiment Net3
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Net
+attr processid 6921
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.gen.numPrio 5
+param **.queue.numPrio 5
+param **.queue.preemptive true
+param **.queue.resume true
+param **.gen.interArrivalTimes "\"0.20 0.25 0.30 0.35 0.40\""
+param **.queue.serviceTimes "\"0.20 0.25 0.30 0.35 0.40\""
+
+scalar Net.sink responseTime4:mean -nan
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink responseTime3:mean -nan
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink responseTime2:mean 1.2325502378527
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink responseTime1:mean 0.909705926807
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink responseTime0:mean 0.826843679238
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.sink responseTime:mean 1.0045050633048
+attr interpolationmode none
+attr title "lifetime of arrived msg, mean"
+attr unit s
+scalar Net.queue eServiceTime4:mean -nan
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue eServiceTime3:mean -nan
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue eServiceTime2:mean 0.14489136398425
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue eServiceTime1:mean 0.38039860843375
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue eServiceTime0:mean 0.350095957343
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue queueingTime4:mean -nan
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue queueingTime3:mean -nan
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue queueingTime2:mean 0.81729499256075
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue queueingTime1:mean 0.342308379032
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue queueingTime0:mean 0.176747721895
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue eServiceTime:mean 0.28649525106373
+attr interpolationmode none
+attr title "extended service time, mean"
+attr unit s
+scalar Net.queue queueingTime:mean 0.46987787745964
+attr interpolationmode none
+attr title "queueing time, mean"
+attr unit s
+scalar Net.queue busy:timeavg 0.9107057685061
+attr interpolationmode sample-hold
+attr title "server busy state, timeavg"
+scalar Net.queue qlen:timeavg 3.909660555576
+attr interpolationmode sample-hold
+attr title "queue length, timeavg"
+
