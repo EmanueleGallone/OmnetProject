@@ -1,5 +1,5 @@
 # OmnetProject
 
 Simulation of an M/M/1 Queue with reconfigurable n-priority queues.
-Look at net.ned file to change parameters.
+Look at omnetpp.ini file to change parameters of configurations.
 Run with Omnetpp IDE.
